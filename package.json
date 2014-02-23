@@ -1,0 +1,33 @@
+{
+  "name": "mimosa-traceur",
+  "version": "0.1.0",
+  "homepage": "https://github.com/craigcav/mimosa-traceur",
+  "author": "Craig Cavalier",
+  "description": "An ES6 to ES5 compiler for Mimosa",
+  "contributors": [
+    {
+      "name": "Craig Cavalier",
+      "email": "craigcav@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/craigcav/mimosa-traceur"
+  },
+  "keywords": [
+    "mimosa",
+    "mmodule",
+    "es6",
+    "harmony",
+    "traceur"
+  ],
+  "dependencies": {
+    "traceur": "0.0.9",
+    "lodash":"2.4.1"
+  },
+  "license": "MIT",
+  "main": "./src",
+  "engines": {
+    "node": ">=0.10"
+  }
+}
