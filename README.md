@@ -1,4 +1,4 @@
-mimosa-tracuer
+mimosa-traceur
 ===========
 ## Overview
 
