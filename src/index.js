@@ -2,6 +2,7 @@
 
 var _ = require('lodash'), 
     config = require('./config'), 
+    path = require('path'),
     traceur = require('traceur');
 
 var compile = function (mimosaConfig, mimosaOptions, next) {
@@ -9,7 +10,7 @@ var compile = function (mimosaConfig, mimosaOptions, next) {
       options = _.extend( {}, mimosaConfig.traceur),
       i = 0,
       newFiles = [],
-      whenDone = mimosaOptions.files.length,
+      whenDone = mimosaOptions.files && mimosaOptions.files.length,
       logger = mimosaConfig.log;
 
   var hasFiles = mimosaOptions.files ? !!mimosaOptions.files.length : false;
@@ -39,28 +40,36 @@ var compile = function (mimosaConfig, mimosaOptions, next) {
         project = new traceur.semantics.symbols.Project('/'),
         traceurOptions = {};
 
-    var sourceFile = new traceur.syntax.SourceFile(file.name, file.inputFileText);
+    var sourceFile = new traceur.syntax.SourceFile(file.inputFileName, file.inputFileText);
     project.addFile(sourceFile);
 
     var compiledObjectMap = traceur.codegeneration.Compiler.compile(reporter, project, false);
 
     if (reporter.hadError()) {
-      logger.error('Compilation failed - '+file.name, {
+      logger.error('Compilation failed - '+file.inputFileName, {
         exitIfBuild: true
       });
     }
 
-    if (options.sourceMaps) {
+    if (options.sourceMap) {
       traceurOptions.sourceMapGenerator = new traceur.outputgeneration.SourceMapGenerator({
-        file: file.name
+        file: file.inputFileName
       });
     }
 
-    var writerConfig = {};
-    var result = traceur.outputgeneration.ProjectWriter.write(compiledObjectMap, writerConfig);
+    var result = traceur.outputgeneration.ProjectWriter.write(compiledObjectMap, traceurOptions);
 
-    if (options.sourceMaps) {
-      file.sourceMap = traceurOptions.sourceMap;
+    if (options.sourceMap) {
+      
+      var extName;
+      extName = path.extname(file.inputFileName);
+      var sourceMap = JSON.parse(traceurOptions.sourceMap);
+      sourceMap.sources[0] = path.basename(file.inputFileName).replace(extName, ".js.map");
+      sourceMap.sourcesContent = [file.inputFileText];
+      sourceMap.file = path.basename(file.outputFileName);
+      var base64SourceMap = new Buffer(JSON.stringify(sourceMap)).toString('base64');
+      var datauri = 'data:application/json;base64,' + base64SourceMap;
+      result = "" + result + "\n//# sourceMappingURL=" + datauri + "\n";
     }
 
     file.outputFileText = result;
@@ -72,12 +81,13 @@ var compile = function (mimosaConfig, mimosaOptions, next) {
 };
 
 var registration = function ( mimosaConfig, register ) {
-  register(['add','update','buildFile'], 'afterCompile', compile, mimosaConfig.extensions.javascript);
-}
+  register(['add','update','buildFile'], 'compile', compile, mimosaConfig.extensions.javascript);
+};
 
 module.exports = {
   registration: registration,
   defaults: config.defaults,
   placeholder: config.placeholder,
-  validate: config.validate
+  validate: config.validate,
+  cleanUpSourceMaps: true
 };
