@@ -6,7 +6,10 @@ exports.defaults = function() {
       sourceMap: true,
       sourceMapDynamic: true,
       sourceMapExclude: [/\/specs?\//, /_spec.js$/],
-      sourceMapConditional: false
+      sourceMapConditional: false,
+      options: {
+        sourceMap:true
+      }
     }
   };
 };
