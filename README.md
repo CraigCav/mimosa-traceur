@@ -9,7 +9,15 @@ For more information regarding Traceur, see https://github.com/google/traceur-co
 
 ## Usage
 
-Add `'traceur'` to your list of modules.  That's all!  Mimosa will install the module for you when you start up.
+Add `'traceur'` to your list of modules.  Mimosa will install the module for you when you start up.
+
+If you are currently using mimosa's [copy](https://github.com/dbashford/mimosa-copy) module it is best that `js` be removed from the mimosa configuration for copy:
+
+```coffee
+// "js" extension should be removed so that it does not confict with the traceur compiler
+copy
+  extensions: ["css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map","md","mp4"]
+```
 
 ## Functionality
 
