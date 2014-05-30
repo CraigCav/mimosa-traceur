@@ -23,6 +23,9 @@ var compile = function (mimosaConfig, mimosaOptions, next) {
     }
   };
 
+  // Turn on/off the experimental features in Traceur
+  traceur.options.experimental = mimosaConfig.traceur.experimental;
+
   return mimosaOptions.files.forEach(function(file) {
     // Check if source maps have been excluded for this file
     if ( options.sourceMap ) {
@@ -39,20 +42,21 @@ var compile = function (mimosaConfig, mimosaOptions, next) {
         project = new traceur.semantics.symbols.Project('/'),
         traceurOptions = {};
 
-    var sourceFile = new traceur.syntax.SourceFile(file.name, file.inputFileText);
+    var sourceFile = new traceur.syntax.SourceFile(file.inputFileName, file.outputFileText || file.inputFileText);
     project.addFile(sourceFile);
 
     var compiledObjectMap = traceur.codegeneration.Compiler.compile(reporter, project, false);
 
     if (reporter.hadError()) {
-      logger.error('Compilation failed - '+file.name, {
+      logger.error('Compilation failed - '+file.inputFileName, {
         exitIfBuild: true
       });
+      return;
     }
 
     if (options.sourceMaps) {
       traceurOptions.sourceMapGenerator = new traceur.outputgeneration.SourceMapGenerator({
-        file: file.name
+        file: file.inputFileName
       });
     }
 
