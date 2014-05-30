@@ -13,12 +13,12 @@ exports.defaults = function() {
 
 exports.placeholder = function() {
   return "\t\n\n"+
-         "  traceur:                     # config settings for the traceur compiler module\n" +
-         "    sourceMap: true            # whether or not to create source maps\n" +
-         "    sourceMapDynamic: true     # whether or not to inline the source maps in the compiled JavaScript\n" +
+         "  traceur:                       # config settings for the traceur compiler module\n" +
+         "    sourceMap: true              # whether or not to create source maps\n" +
+         "    sourceMapDynamic: true       # whether or not to inline the source maps in the compiled JavaScript\n" +
          "    sourceMapExclude: [/\\/specs?\\//, /_spec.js$/] # files to exclude from source map generation\n" +
-         "    sourceMapConditional: false # whether or not to use conditional source maps\n"; +
-         "    experimental: false         # Turn on experimental features like 'let' block binding, arrow functions, etc."
+         "    sourceMapConditional: false  # whether or not to use conditional source maps\n"; +
+         "    experimental: false          # Turn on experimental features like 'let' block binding, arrow functions, etc."
 };
 
 exports.validate = function(config, validators) {
