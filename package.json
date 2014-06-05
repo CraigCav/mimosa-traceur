@@ -1,6 +1,6 @@
 {
   "name": "mimosa-traceur",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/craigcav/mimosa-traceur",
   "author": "Craig Cavalier",
   "description": "An ES6 to ES5 compiler for Mimosa",
